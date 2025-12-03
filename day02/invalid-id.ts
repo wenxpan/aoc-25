@@ -78,7 +78,6 @@ export const isInvalidIdAtLeastTwice = (id: string) => {
       const firstSegment = id.slice(0, i)
       const checkAfterSplit = id.split(firstSegment).join('')
       if (checkAfterSplit === '') {
-        console.log('invalid===', id)
         return true
       }
     }
