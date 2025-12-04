@@ -1,5 +1,7 @@
 import {
   calcNumberOfPosition,
+  calcNumberOfPositionAnyClick,
+  calcNumOfClickAfterRotation,
   calcPositionAfterRotation,
   splitInput,
 } from './safe-rotation'
@@ -30,6 +32,22 @@ describe('calcPositionAfterRotation', () => {
   })
 })
 
+describe('calcNumOfClickAfterRotation', () => {
+  it('calculates number of clicks', () => {
+    expect(calcNumOfClickAfterRotation(50, 'L68')).toEqual([82, 1])
+    expect(calcNumOfClickAfterRotation(82, 'L30')).toEqual([52, 0])
+    expect(calcNumOfClickAfterRotation(52, 'R48')).toEqual([0, 1])
+    expect(calcNumOfClickAfterRotation(0, 'L5')).toEqual([95, 0])
+    expect(calcNumOfClickAfterRotation(95, 'R60')).toEqual([55, 1])
+    expect(calcNumOfClickAfterRotation(55, 'L55')).toEqual([0, 1])
+    expect(calcNumOfClickAfterRotation(0, 'L1')).toEqual([99, 0])
+    expect(calcNumOfClickAfterRotation(99, 'L99')).toEqual([0, 1])
+    expect(calcNumOfClickAfterRotation(0, 'R14')).toEqual([14, 0])
+    expect(calcNumOfClickAfterRotation(14, 'L82')).toEqual([32, 1])
+    expect(calcNumOfClickAfterRotation(50, 'R1000')).toEqual([50, 10])
+  })
+})
+
 describe('calcNumberOfPosition', () => {
   it('correct number of times for test input', async () => {
     const input = await Bun.file('day01/data/01.txt').text()
@@ -45,5 +63,31 @@ describe('calcNumberOfPosition', () => {
     expect(
       calcNumberOfPosition({ startPos: 50, actions: lines, posToMatch: 0 })
     ).toBe(1120)
+  })
+})
+
+describe('calcNumberOfPositionAnyClick', () => {
+  it('correct number of times for test input', async () => {
+    const input = await Bun.file('day01/data/01.txt').text()
+    const lines = await splitInput(input)
+    expect(
+      calcNumberOfPositionAnyClick({
+        startPos: 50,
+        actions: lines,
+        posToMatch: 0,
+      })
+    ).toBe(6)
+  })
+
+  it('correct number of times for full input', async () => {
+    const input = await Bun.file('day01/data/02.txt').text()
+    const lines = await splitInput(input)
+    expect(
+      calcNumberOfPositionAnyClick({
+        startPos: 50,
+        actions: lines,
+        posToMatch: 0,
+      })
+    ).toBe(6554)
   })
 })

@@ -54,3 +54,57 @@ export const calcNumberOfPosition = ({
   }
   return numberOfTimes
 }
+
+export const calcNumOfClickAfterRotation = (
+  startPos: number,
+  action: RotationAction,
+  posToMatch = 0,
+  range = 99
+) => {
+  const afterPosition = calcPositionAfterRotation(startPos, action, range)
+
+  const totalPos = range + 1
+
+  const rotation = action[0]
+  const step = +action.slice(1)
+
+  const diff =
+    rotation === LEFT
+      ? (startPos - posToMatch + totalPos) % totalPos
+      : (posToMatch - startPos + totalPos) % totalPos
+
+  const firstHit = diff === 0 ? totalPos : diff
+
+  const rounds =
+    step >= firstHit ? 1 + Math.floor((step - firstHit) / totalPos) : 0
+
+  return [afterPosition, rounds]
+}
+
+export const calcNumberOfPositionAnyClick = ({
+  posToMatch,
+  startPos,
+  actions,
+  range = 99,
+}: {
+  posToMatch: number
+  startPos: number
+  actions: RotationAction[]
+  range?: number
+}) => {
+  let currentPosition = startPos
+  let numberOfTimes = 0
+  for (const action of actions) {
+    const [current, times] = calcNumOfClickAfterRotation(
+      currentPosition,
+      action,
+      posToMatch,
+      range
+    )
+    if (current !== undefined && times !== undefined) {
+      numberOfTimes += times
+      currentPosition = current
+    }
+  }
+  return numberOfTimes
+}
