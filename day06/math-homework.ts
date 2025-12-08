@@ -72,7 +72,7 @@ export const solveAdvancedWorksheet = (rawInput: string) => {
         input.push(+num)
       }
     }
-    console.log({ operation, input, startIndex, endIndex })
+
     lastIndex = endIndex + 1
     problems.push({ operation, input })
   }

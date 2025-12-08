@@ -21,6 +21,6 @@ describe('solveAdvancedWorksheet', () => {
 
   it.only('solves problems for full input', async () => {
     const input = await Bun.file('day06/data/02.txt').text()
-    expect(solveAdvancedWorksheet(input)).toBe(0)
+    expect(solveAdvancedWorksheet(input)).toBe(6846480843636)
   })
 })
