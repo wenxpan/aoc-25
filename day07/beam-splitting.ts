@@ -1,4 +1,4 @@
-export const drawBeamSplitting = (input: string, filePath: string) => {
+export const drawBeamSplitting = (input: string) => {
   const grid = input
     .trim()
     .split('\n')
@@ -12,8 +12,6 @@ export const drawBeamSplitting = (input: string, filePath: string) => {
       }
     }
   }
-  const output = grid.map((row) => row.join('')).join('\n')
-  Bun.write(filePath, output)
 
   return grid
 }
@@ -51,7 +49,10 @@ const checkIsSplit = (grid: string[][], x: number, y: number) => {
 
 export const calcTimesOfBeamSplit = (input: string, fileName: string) => {
   const outputFile = 'day07/output/' + fileName
-  const grid = drawBeamSplitting(input, outputFile)
+  const grid = drawBeamSplitting(input)
+
+  const output = grid.map((row) => row.join('')).join('\n')
+  Bun.write(outputFile, output)
 
   let result = 0
   for (const [y, row] of grid.entries()) {
@@ -60,5 +61,52 @@ export const calcTimesOfBeamSplit = (input: string, fileName: string) => {
       result += isSplit ? 1 : 0
     }
   }
+  return result
+}
+
+// PART 2
+export const calcBeamTimeline = (input: string, fileName: string) => {
+  const outputFile = 'day07/output/p2/' + fileName
+  const grid = drawBeamSplitting(input)
+
+  for (const [y, row] of grid.entries()) {
+    for (const [x, current] of row.entries()) {
+      if (current !== '|') {
+        continue
+      }
+
+      const currentRow = grid[y]
+      const rowAbove = grid[y - 1]
+      if (!rowAbove || !currentRow) {
+        continue
+      }
+
+      if (rowAbove[x] === 'S') {
+        currentRow.splice(x, 1, '1')
+        continue
+      }
+
+      const hasLeftSplitter = currentRow[x - 1] === '^'
+      const hasRightSplitter = currentRow[x + 1] === '^'
+
+      const leftSplitTimes =
+        hasLeftSplitter && rowAbove[x - 1] !== '.' ? rowAbove[x - 1] : 0
+      const rightSplitTimes =
+        hasRightSplitter && rowAbove[x + 1] !== '.' ? rowAbove[x + 1] : 0
+      const directEmitTimes = rowAbove[x] === '.' ? 0 : rowAbove[x]
+      const totalTimes =
+        +leftSplitTimes! + +rightSplitTimes! + +directEmitTimes!
+      currentRow.splice(x, 1, totalTimes.toString())
+    }
+  }
+
+  const output = grid.map((row) => row.join('')).join('\n')
+  Bun.write(outputFile, output)
+
+  const result = grid[grid.length - 1]
+    ?.filter((val) => val !== '.')
+    .map((val) => +val)
+    .reduce((prev, curr) => prev + curr, 0)
+
   return result
 }
