@@ -8,5 +8,9 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.17.21",
+    "lodash.combinations": "^18.11.1"
   }
 }
